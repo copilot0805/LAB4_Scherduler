@@ -1,0 +1,12 @@
+../Core/Src/main.c:59:6:task_Led1_Toggle	1
+../Core/Src/main.c:63:6:task_Led2_Toggle	1
+../Core/Src/main.c:68:6:task_Led3_Toggle	1
+../Core/Src/main.c:73:6:task_Led4_Toggle	1
+../Core/Src/main.c:78:6:task_Led5_Toggle	1
+../Core/Src/main.c:83:6:task_Delete_Led1	2
+../Core/Src/main.c:94:5:main	1
+../Core/Src/main.c:153:6:SystemClock_Config	3
+../Core/Src/main.c:190:13:MX_TIM2_Init	4
+../Core/Src/main.c:235:13:MX_GPIO_Init	1
+../Core/Src/main.c:264:6:HAL_TIM_PeriodElapsedCallback	1
+../Core/Src/main.c:273:6:Error_Handler	1
