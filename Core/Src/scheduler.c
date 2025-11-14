@@ -64,7 +64,7 @@ uint32_t SCH_Add_Task(pFunction pFunction, uint32_t DELAY, uint32_t PERIOD){
 	sTasks* pCurrent = g_TaskList_Head;
 
 	// Trừ delay của tác vụ đầu tiên khỏi SỐ TICK
-	delay_in_ticks -= pCurrent->Delay; // <-- SỬA LỖI 4: Bắt đầu dùng delay_in_ticks
+	delay_in_ticks -= pCurrent->Delay;
 
 	// Tìm vị trí chèn
 	while(pCurrent->pNext != 0 && delay_in_ticks > pCurrent->pNext->Delay){
@@ -106,7 +106,6 @@ void SCH_Update(void){
 	}
 }
 
-// Hàm SCH_Dispatch_Tasks của bạn đã đúng
 void SCH_Dispatch_Tasks(void){
 	for(int i = 0; i < SCH_MAX_TASKS; i++){
 		if(SCH_tasks_G[i].RunMe > 0){
