@@ -21,7 +21,7 @@ void SCH_Init(void){
 
 uint32_t SCH_Add_Task(pFunction pFunction, uint32_t DELAY, uint32_t PERIOD){
 
-    // 1. Tìm slot rảnh
+    // Tìm slot rảnh
 	uint32_t task_index = 0;
 	while (task_index < SCH_MAX_TASKS && SCH_tasks_G[task_index].pTask != 0){
 		task_index++;
@@ -31,7 +31,6 @@ uint32_t SCH_Add_Task(pFunction pFunction, uint32_t DELAY, uint32_t PERIOD){
 		return NO_TASK_ID;
 	}
 
-    // 2. === SỬA LỖI LOGIC (BẮT ĐẦU) ===
     // Chuyển đổi DELAY (ms) sang SỐ TICK
 	uint32_t delay_in_ticks = DELAY / SCH_TICK_MS;
 
@@ -42,34 +41,34 @@ uint32_t SCH_Add_Task(pFunction pFunction, uint32_t DELAY, uint32_t PERIOD){
 	pNewTask->pNext = 0;
     // pNewTask->Delay (bằng SỐ TICK) sẽ được gán bên dưới
 
-	// 3. Chèn vào danh sách (dùng SỐ TICK)
+	// Chèn vào danh sách (dùng SỐ TICK)
 
-    // 3.1. Danh sách rỗng
+    // Danh sách rỗng
 	if(g_TaskList_Head == 0){
-		pNewTask->Delay = delay_in_ticks; // <-- SỬA LỖI 1: Dùng delay_in_ticks
+		pNewTask->Delay = delay_in_ticks;
 		g_TaskList_Head = pNewTask;
 		return task_index;
 	}
 
-	// 3.2. Chèn vào đầu
-	if(delay_in_ticks < g_TaskList_Head->Delay){ // <-- SỬA LỖI 2: So sánh Ticks với Ticks
+	// Chèn vào đầu
+	if(delay_in_ticks < g_TaskList_Head->Delay){
 		pNewTask->Delay = delay_in_ticks;
-		g_TaskList_Head->Delay = g_TaskList_Head->Delay - delay_in_ticks; // <-- SỬA LỖI 3: Trừ Ticks
+		g_TaskList_Head->Delay = g_TaskList_Head->Delay - delay_in_ticks;
 
 		pNewTask->pNext = g_TaskList_Head;
 		g_TaskList_Head = pNewTask;
 		return task_index;
 	}
 
-	// 3.3. Chèn vào giữa hoặc cuối
+	// Chèn vào giữa hoặc cuối
 	sTasks* pCurrent = g_TaskList_Head;
 
 	// Trừ delay của tác vụ đầu tiên khỏi SỐ TICK
 	delay_in_ticks -= pCurrent->Delay; // <-- SỬA LỖI 4: Bắt đầu dùng delay_in_ticks
 
 	// Tìm vị trí chèn
-	while(pCurrent->pNext != 0 && delay_in_ticks > pCurrent->pNext->Delay){ // <-- SỬA LỖI 5: Dùng Ticks
-		delay_in_ticks -= pCurrent->pNext->Delay; // <-- SỬA LỖI 6: Dùng Ticks
+	while(pCurrent->pNext != 0 && delay_in_ticks > pCurrent->pNext->Delay){
+		delay_in_ticks -= pCurrent->pNext->Delay;
 		pCurrent = pCurrent->pNext;
 	}
 
@@ -77,10 +76,9 @@ uint32_t SCH_Add_Task(pFunction pFunction, uint32_t DELAY, uint32_t PERIOD){
 	pNewTask->Delay = delay_in_ticks;
 
 	if(pCurrent->pNext != 0){
-		pCurrent->pNext->Delay -= delay_in_ticks; // <-- SỬA LỖI 8: Dùng Ticks
+		pCurrent->pNext->Delay -= delay_in_ticks;
 	}
 
-    // === SỬA LỖI LOGIC (KẾT THÚC) ===
 
 	// Chèn node mới
 	pNewTask->pNext = pCurrent->pNext;
@@ -90,7 +88,6 @@ uint32_t SCH_Add_Task(pFunction pFunction, uint32_t DELAY, uint32_t PERIOD){
 }
 
 
-// Hàm SCH_Update của bạn đã đúng (phiên bản O(1))
 void SCH_Update(void){
 	if(g_TaskList_Head != 0) {
         if (g_TaskList_Head->Delay == 0) {

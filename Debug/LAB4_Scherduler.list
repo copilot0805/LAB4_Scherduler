@@ -667,7 +667,7 @@ uint32_t SCH_Add_Task(pFunction pFunction, uint32_t DELAY, uint32_t PERIOD){
  8000478:	60b9      	str	r1, [r7, #8]
  800047a:	607a      	str	r2, [r7, #4]
 
-    // 1. Tìm slot rảnh
+    // Tìm slot rảnh
 	uint32_t task_index = 0;
  800047c:	2300      	movs	r3, #0
  800047e:	61fb      	str	r3, [r7, #28]
@@ -702,7 +702,6 @@ uint32_t SCH_Add_Task(pFunction pFunction, uint32_t DELAY, uint32_t PERIOD){
  80004ac:	e072      	b.n	8000594 <SCH_Add_Task+0x124>
 	}
 
-    // 2. === SỬA LỖI LOGIC (BẮT ĐẦU) ===
     // Chuyển đổi DELAY (ms) sang SỐ TICK
 	uint32_t delay_in_ticks = DELAY / SCH_TICK_MS;
  80004ae:	68bb      	ldr	r3, [r7, #8]
@@ -738,15 +737,15 @@ uint32_t SCH_Add_Task(pFunction pFunction, uint32_t DELAY, uint32_t PERIOD){
  80004e0:	615a      	str	r2, [r3, #20]
     // pNewTask->Delay (bằng SỐ TICK) sẽ được gán bên dưới
 
-	// 3. Chèn vào danh sách (dùng SỐ TICK)
+	// Chèn vào danh sách (dùng SỐ TICK)
 
-    // 3.1. Danh sách rỗng
+    // Danh sách rỗng
 	if(g_TaskList_Head == 0){
  80004e2:	4b31      	ldr	r3, [pc, #196]	@ (80005a8 <SCH_Add_Task+0x138>)
  80004e4:	681b      	ldr	r3, [r3, #0]
  80004e6:	2b00      	cmp	r3, #0
  80004e8:	d107      	bne.n	80004fa <SCH_Add_Task+0x8a>
-		pNewTask->Delay = delay_in_ticks; // <-- SỬA LỖI 1: Dùng delay_in_ticks
+		pNewTask->Delay = delay_in_ticks;
  80004ea:	693b      	ldr	r3, [r7, #16]
  80004ec:	69ba      	ldr	r2, [r7, #24]
  80004ee:	605a      	str	r2, [r3, #4]
@@ -759,8 +758,8 @@ uint32_t SCH_Add_Task(pFunction pFunction, uint32_t DELAY, uint32_t PERIOD){
  80004f8:	e04c      	b.n	8000594 <SCH_Add_Task+0x124>
 	}
 
-	// 3.2. Chèn vào đầu
-	if(delay_in_ticks < g_TaskList_Head->Delay){ // <-- SỬA LỖI 2: So sánh Ticks với Ticks
+	// Chèn vào đầu
+	if(delay_in_ticks < g_TaskList_Head->Delay){
  80004fa:	4b2b      	ldr	r3, [pc, #172]	@ (80005a8 <SCH_Add_Task+0x138>)
  80004fc:	681b      	ldr	r3, [r3, #0]
  80004fe:	685b      	ldr	r3, [r3, #4]
@@ -771,7 +770,7 @@ uint32_t SCH_Add_Task(pFunction pFunction, uint32_t DELAY, uint32_t PERIOD){
  8000506:	693b      	ldr	r3, [r7, #16]
  8000508:	69ba      	ldr	r2, [r7, #24]
  800050a:	605a      	str	r2, [r3, #4]
-		g_TaskList_Head->Delay = g_TaskList_Head->Delay - delay_in_ticks; // <-- SỬA LỖI 3: Trừ Ticks
+		g_TaskList_Head->Delay = g_TaskList_Head->Delay - delay_in_ticks;
  800050c:	4b26      	ldr	r3, [pc, #152]	@ (80005a8 <SCH_Add_Task+0x138>)
  800050e:	681b      	ldr	r3, [r3, #0]
  8000510:	6859      	ldr	r1, [r3, #4]
@@ -795,7 +794,7 @@ uint32_t SCH_Add_Task(pFunction pFunction, uint32_t DELAY, uint32_t PERIOD){
  800052c:	e032      	b.n	8000594 <SCH_Add_Task+0x124>
 	}
 
-	// 3.3. Chèn vào giữa hoặc cuối
+	// Chèn vào giữa hoặc cuối
 	sTasks* pCurrent = g_TaskList_Head;
  800052e:	4b1e      	ldr	r3, [pc, #120]	@ (80005a8 <SCH_Add_Task+0x138>)
  8000530:	681b      	ldr	r3, [r3, #0]
@@ -810,9 +809,9 @@ uint32_t SCH_Add_Task(pFunction pFunction, uint32_t DELAY, uint32_t PERIOD){
  800053c:	61bb      	str	r3, [r7, #24]
 
 	// Tìm vị trí chèn
-	while(pCurrent->pNext != 0 && delay_in_ticks > pCurrent->pNext->Delay){ // <-- SỬA LỖI 5: Dùng Ticks
+	while(pCurrent->pNext != 0 && delay_in_ticks > pCurrent->pNext->Delay){
  800053e:	e008      	b.n	8000552 <SCH_Add_Task+0xe2>
-		delay_in_ticks -= pCurrent->pNext->Delay; // <-- SỬA LỖI 6: Dùng Ticks
+		delay_in_ticks -= pCurrent->pNext->Delay;
  8000540:	697b      	ldr	r3, [r7, #20]
  8000542:	695b      	ldr	r3, [r3, #20]
  8000544:	685b      	ldr	r3, [r3, #4]
@@ -823,7 +822,7 @@ uint32_t SCH_Add_Task(pFunction pFunction, uint32_t DELAY, uint32_t PERIOD){
  800054c:	697b      	ldr	r3, [r7, #20]
  800054e:	695b      	ldr	r3, [r3, #20]
  8000550:	617b      	str	r3, [r7, #20]
-	while(pCurrent->pNext != 0 && delay_in_ticks > pCurrent->pNext->Delay){ // <-- SỬA LỖI 5: Dùng Ticks
+	while(pCurrent->pNext != 0 && delay_in_ticks > pCurrent->pNext->Delay){
  8000552:	697b      	ldr	r3, [r7, #20]
  8000554:	695b      	ldr	r3, [r3, #20]
  8000556:	2b00      	cmp	r3, #0
@@ -847,7 +846,7 @@ uint32_t SCH_Add_Task(pFunction pFunction, uint32_t DELAY, uint32_t PERIOD){
  800056e:	695b      	ldr	r3, [r3, #20]
  8000570:	2b00      	cmp	r3, #0
  8000572:	d007      	beq.n	8000584 <SCH_Add_Task+0x114>
-		pCurrent->pNext->Delay -= delay_in_ticks; // <-- SỬA LỖI 8: Dùng Ticks
+		pCurrent->pNext->Delay -= delay_in_ticks;
  8000574:	697b      	ldr	r3, [r7, #20]
  8000576:	695b      	ldr	r3, [r3, #20]
  8000578:	6859      	ldr	r1, [r3, #4]
@@ -858,7 +857,6 @@ uint32_t SCH_Add_Task(pFunction pFunction, uint32_t DELAY, uint32_t PERIOD){
  8000582:	605a      	str	r2, [r3, #4]
 	}
 
-    // === SỬA LỖI LOGIC (KẾT THÚC) ===
 
 	// Chèn node mới
 	pNewTask->pNext = pCurrent->pNext;
@@ -887,7 +885,6 @@ uint32_t SCH_Add_Task(pFunction pFunction, uint32_t DELAY, uint32_t PERIOD){
 080005ac <SCH_Update>:
 
 
-// Hàm SCH_Update của bạn đã đúng (phiên bản O(1))
 void SCH_Update(void){
  80005ac:	b480      	push	{r7}
  80005ae:	b083      	sub	sp, #12
