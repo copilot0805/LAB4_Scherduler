@@ -18,11 +18,12 @@ typedef struct sTasks{
 	void (*pTask)(void);//con tro ham
 	uint32_t     Delay;
 	uint32_t     Period;
-	uint32_t     RunMe;
+	//uint32_t     RunMe;
 
 	uint32_t     TaskID;
 
 	struct sTasks* pNext;
+	struct sTasks* pNextReady;
 
 }sTasks;
 
